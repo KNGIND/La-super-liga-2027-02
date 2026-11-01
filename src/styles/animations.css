@@ -1,0 +1,50 @@
+/* ANIMACIONES Y PERFILES DE RENDIMIENTO
+   <html data-perf="eco|balanced|ultra"> lo pone core/prefs.ts.
+   Regla de oro: solo se animan transform y opacity. El desenfoque (backdrop-filter) es lo más caro:
+   solo existe en BALANCED y ULTRA, y solo en barras y fondos de capas. */
+
+/* Entrada de pantalla */
+.view.view--in { animation: view-in var(--dur) var(--ease) both; }
+@keyframes view-in { from { opacity: 0; transform: translateY(6px); } }
+
+/* ---------- ECO: celulares de gama baja ---------- */
+html[data-perf='eco'] {
+  --blur: 0px; --use-shadow: 0;
+  --dur-fast: 0ms; --dur: 80ms; --dur-slow: 140ms;
+  --shadow-float: none;
+}
+html[data-perf='eco'] .appbar, html[data-perf='eco'] .dock__inner { background: var(--surface); }
+html[data-perf='eco'] .view.view--in { animation: none; }
+html[data-perf='eco'] .sk::after { animation: none; }
+html[data-perf='eco'] .badge--live i { animation: none; }
+html[data-perf='eco'] .hero, html[data-perf='eco'] .md-hero { background: var(--card); }
+
+/* ---------- BALANCED: desenfoque solo en barras ---------- */
+html[data-perf='balanced'] { --blur: 12px; }
+html[data-perf='balanced'] .appbar,
+html[data-perf='balanced'] .dock__inner {
+  -webkit-backdrop-filter: saturate(1.4) blur(var(--blur));
+  backdrop-filter: saturate(1.4) blur(var(--blur));
+}
+
+/* ---------- ULTRA: efectos avanzados ---------- */
+html[data-perf='ultra'] { --blur: 24px; --dur: 280ms; --dur-slow: 460ms; }
+html[data-perf='ultra'] .appbar,
+html[data-perf='ultra'] .dock__inner,
+html[data-perf='ultra'] .drawer__panel,
+html[data-perf='ultra'] .modal__panel {
+  -webkit-backdrop-filter: saturate(1.6) blur(var(--blur));
+  backdrop-filter: saturate(1.6) blur(var(--blur));
+}
+html[data-perf='ultra'] .drawer__panel, html[data-perf='ultra'] .modal__panel { background: var(--glass); }
+html[data-perf='ultra'] .layer__backdrop { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+html[data-perf='ultra'] .mc--live { box-shadow: 0 0 0 1px var(--live-soft), 0 8px 28px -10px var(--live); }
+html[data-perf='ultra'] a.card:hover { transform: translateY(-2px); }
+html[data-perf='ultra'] .dock__item.is-active { transition-timing-function: var(--ease-spring); }
+.rive-slot { display: none; }
+html[data-perf='ultra'] .rive-slot { display: block; width: 100%; max-width: 220px; aspect-ratio: 1; margin: 0 auto; }
+
+/* ---------- Movimiento reducido del sistema: respeta SIEMPRE ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
