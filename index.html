@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es" data-theme="dark" data-perf="balanced">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#09090B" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="La Súper Liga 2027: partidos, tabla, copas, pronósticos y noticias." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <title>La Súper Liga 2027</title>
+    <!-- Aplica el tema ANTES de pintar para que no haya destello blanco/negro. -->
+    <script>
+      (function () {
+        try {
+          var p = JSON.parse(localStorage.getItem('lsl27:prefs') || '{}');
+          var t = p.theme || 'dark';
+          if (t === 'system') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          document.documentElement.dataset.theme = t;
+          var m = navigator.deviceMemory || 4, c = navigator.hardwareConcurrency || 4;
+          var perf = p.perf && p.perf !== 'auto' ? p.perf : m <= 2 || c <= 4 ? 'eco' : m >= 6 && c >= 8 ? 'ultra' : 'balanced';
+          document.documentElement.dataset.perf = perf;
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      /* Estilo mínimo de arranque (antes de que cargue el CSS real). */
+      html { background: #09090b; }
+      html[data-theme='light'] { background: #f4f4f5; }
+      #splash { position: fixed; inset: 0; display: grid; place-items: center; background: inherit; z-index: 100; }
+      #splash i { width: 44px; height: 44px; border-radius: 50%; border: 3px solid #3f3f46; border-top-color: #3b82f6; animation: s 0.8s linear infinite; }
+      @keyframes s { to { transform: rotate(360deg); } }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="layers"></div>
+    <div id="splash"><i></i></div>
+    <noscript><p style="padding:24px;font-family:system-ui">La Súper Liga necesita JavaScript para funcionar.</p></noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
